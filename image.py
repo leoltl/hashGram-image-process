@@ -12,9 +12,10 @@ def fetch(resource):
 
 def apply_filter(img, *filters):
   _img = img
-  for (f, *args) in filters:
+  for (filterfn, *args) in filters:
     try:
-      _img = globals()[f'{f}'](_img, *args)
+      # look for filter function in module context
+      _img = globals()[f'{filterfn}'](_img, *args)
     except KeyError:
       pass
   return _img
