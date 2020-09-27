@@ -14,6 +14,7 @@ def handle_delivery(channel, method, header, body):
     img_data.close()
     channel.basic_ack(delivery_tag=method.delivery_tag)
     image.prune(resource_key)
+    channel.basic_publish('', 'completed', json.dumps({ 'resource-key': resource_key }))
   except Exception as e:
     print(e)
 
@@ -23,7 +24,7 @@ connection = amqp.init('upload', handle_delivery)
 # start_consuming
 try:
   # Loop so we can communicate with RabbitMQ
-  connection.ioloop.start()
+  connection.ioloop.start() 
 except KeyboardInterrupt:
   # Gracefully close the connection
   connection.close()
